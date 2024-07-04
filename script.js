@@ -7,10 +7,19 @@ const weatherCardsDiv = document.querySelector(".weather-cards");
 const API_KEY = "b16bf2c64dcea03ecadf1c5ee6d87e47"; // API key for OpenWeatherMap API
 
 const createWeatherCard = (cityName, weatherItem, index) => {
-    if(index === 0) { // HTML for the main weather card
+    const date = new Date(weatherItem.dt_txt);
+    const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`; // Format date as MM-DD-YYYY
+
+    const currentTemp = ((weatherItem.main.temp - 273.15) * (9 / 5) + 32).toFixed(2);
+    const tempMax = ((weatherItem.main.temp_max - 273.15) * (9 / 5) + 32).toFixed(2);
+    const tempMin = ((weatherItem.main.temp_min - 273.15) * (9 / 5) + 32).toFixed(2);
+
+    if (index === 0) { // HTML for the main weather card
         return `<div class="details">
-                    <h2>${cityName} (${weatherItem.dt_txt.split(" ")[0]})</h2>
-                    <h6>Temperature: ${((weatherItem.main.temp - 273.15) * (9/5) + 32).toFixed(2)}°F</h6>
+                    <h2>${cityName} (${formattedDate})</h2>
+                    <h6>Current Temperature: ${currentTemp}°F</h6>
+                    <h6>High: ${tempMax}°F</h6>
+                    <h6>Low: ${tempMin}°F</h6>
                     <h6>Wind: ${(weatherItem.wind.speed * 2.23694).toFixed(2)} MPH</h6>
                     <h6>Humidity: ${weatherItem.main.humidity}%</h6>
                 </div>
@@ -20,9 +29,11 @@ const createWeatherCard = (cityName, weatherItem, index) => {
                 </div>`;
     } else { // HTML for the other five day forecast card
         return `<li class="card">
-                    <h3>(${weatherItem.dt_txt.split(" ")[0]})</h3>
+                    <h3>(${formattedDate})</h3>
                     <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@4x.png" alt="weather-icon">
-                    <h6>Temp: ${((weatherItem.main.temp - 273.15) * (9/5) + 32).toFixed(2)}°F</h6>
+                    <h6>Average Temp: ${currentTemp}°F</h6>
+                    <h6>High: ${tempMax}°F</h6>
+                    <h6>Low: ${tempMin}°F</h6>
                     <h6>Wind: ${(weatherItem.wind.speed * 2.23694).toFixed(2)} MPH</h6>
                     <h6>Humidity: ${weatherItem.main.humidity}%</h6>
                 </li>`;
